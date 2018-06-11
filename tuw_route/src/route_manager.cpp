@@ -39,13 +39,13 @@
 using namespace tuw;
 using namespace std;
 
-RouteManager::RouteManager() : routeWaypointSampleDist_(0.5)
+RouteManager::RouteManager() : route_waypoint_sample_dist_(0.5)
 {
 }
 
 void RouteManager::update(const Pose2D& _agentPose, const bool& _keepLast)
 {
-  agentPose_ = _agentPose;
+  agent_pose_ = _agentPose;
   updateWaypoints(_keepLast);
 }
 
@@ -63,7 +63,7 @@ void RouteManager::loadRoute(const std::vector<Pose2D>& _pointsSeq)
   double segmentLength = 0;
   for (size_t i = 1; i < _pointsSeq.size(); i++)
   {
-    double route_ds = routeWaypointSampleDist_ - segmentLength;
+    double route_ds = route_waypoint_sample_dist_ - segmentLength;
 
     LineSegment2D lineSegment(Point2D(_pointsSeq[i - 1].x(), _pointsSeq[i - 1].y()),
                               Point2D(_pointsSeq[i].x(), _pointsSeq[i].y()));
@@ -81,7 +81,7 @@ void RouteManager::loadRoute(const std::vector<Pose2D>& _pointsSeq)
       Waypoint& lastRouteWaypoint = waypoints_.back();
       p0 = Point2D(lastRouteWaypoint.pose.x(), lastRouteWaypoint.pose.y());
       segmentLength -= route_ds;
-      route_ds = routeWaypointSampleDist_;
+      route_ds = route_waypoint_sample_dist_;
     }
   }
   waypoints_.push_back(Waypoint());
@@ -115,7 +115,7 @@ void RouteManager::pauseCurrentRoute()
 
   waypoints_.clear();
   waypoints_.push_back(Waypoint());
-  waypoints_.back().pose = agentPose_;
+  waypoints_.back().pose = agent_pose_;
   waypoints_.back().state = Waypoint::STATE_AHEAD;
 
   compute_line_segments();
@@ -141,12 +141,12 @@ void RouteManager::resumeCurrentRoute()
 
 Pose2D RouteManager::agentPose()
 {
-  return agentPose_;
+  return agent_pose_;
 }
 
 void RouteManager::updateWaypoints(const bool& _keepLast)
 {
-  Pose2D& p0 = agentPose_;
+  Pose2D& p0 = agent_pose_;
   /// find neraest waypoint
   double distance_to_nearest_waypoint = std::numeric_limits<double>::max();
   size_t nearest_way_point = std::numeric_limits<size_t>::max();
@@ -165,7 +165,7 @@ void RouteManager::updateWaypoints(const bool& _keepLast)
         double a0 = waypoint.pose.theta();
         double a1 = p0.theta() + M_PI / 2.;
         double da = fabs(atan2(sin(a0 - a1), cos(a0 - a1)));  /// unsigned minimal delta angle difference
-        if (da < (visitedWaypointMinDAngle_ * M_PI) / 180.0)
+        if (da < (visited_waypoint_min_dangle_ * M_PI) / 180.0)
         {
           distance_to_nearest_waypoint = d;
           nearest_way_point = i;
@@ -189,7 +189,7 @@ void RouteManager::updateWaypoints(const bool& _keepLast)
     else
     {
       /// update waypoints state
-      if (distance_to_nearest_waypoint < routeMaxDeviation_)
+      if (distance_to_nearest_waypoint < route_max_deviation_)
       {
         double active_distance_start = -1;
         for (size_t i = idx_last_visited; i < size(); i++)
@@ -207,7 +207,7 @@ void RouteManager::updateWaypoints(const bool& _keepLast)
               active_distance_start = waypoint.distanceToGoal;
             }
             double d = active_distance_start - waypoint.distanceToGoal;
-            if (d < waypointActiveArcLen_)
+            if (d < waypoint_active_arc_len_)
             {
               waypoint.state = Waypoint::STATE_ACTIVE;
               active_idx_.push_back(i);

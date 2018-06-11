@@ -45,10 +45,10 @@ class RouteConverterRos
 public:
   static void toRosMsg(const RouteManager& _routeManager, tuw_route_msgs::Route& _msg)
   {
-    _msg.routeWaypointSampleDist = _routeManager.routeWaypointSampleDist_;
-    _msg.routeActiveArcLen = _routeManager.waypointActiveArcLen_;
-    _msg.routeMaxDeviation = _routeManager.routeMaxDeviation_;
-    _msg.routeIsVisitedMaxAngle = _routeManager.visitedWaypointMinDAngle_;
+    _msg.route_waypoint_sample_dist = _routeManager.route_waypoint_sample_dist_;
+    _msg.route_active_arc_len = _routeManager.waypoint_active_arc_len_;
+    _msg.route_max_deviation = _routeManager.route_max_deviation_;
+    _msg.route_is_visited_max_angle = _routeManager.visited_waypoint_min_dangle_;
     _msg.waypoints.resize(_routeManager.waypoints_.size());
     for (size_t i = 0; i < _routeManager.waypoints_.size(); ++i)
     {
@@ -59,15 +59,15 @@ public:
       msgWaypointI.pose.theta = waypointI.pose.theta();
       msgWaypointI.state = waypointI.state;
     }
-    _msg.waypointActiveIdx = _routeManager.active_idx_;
+    _msg.waypoint_active_idx = _routeManager.active_idx_;
   }
 
   static void fromRosMsg(const tuw_route_msgs::Route& _msg, RouteManager& _routeManager)
   {
-    _routeManager.routeWaypointSampleDist_ = _msg.routeWaypointSampleDist;
-    _routeManager.waypointActiveArcLen_ = _msg.routeActiveArcLen;
-    _routeManager.routeMaxDeviation_ = _msg.routeMaxDeviation;
-    _routeManager.visitedWaypointMinDAngle_ = _msg.routeIsVisitedMaxAngle;
+    _routeManager.route_waypoint_sample_dist_ = _msg.route_waypoint_sample_dist;
+    _routeManager.waypoint_active_arc_len_ = _msg.route_active_arc_len;
+    _routeManager.route_max_deviation_ = _msg.route_max_deviation;
+    _routeManager.visited_waypoint_min_dangle_ = _msg.route_is_visited_max_angle;
 
     _routeManager.waypoints_.resize(_msg.waypoints.size());
     for (size_t i = 0; i < _msg.waypoints.size(); ++i)
@@ -79,7 +79,7 @@ public:
       waypointI.pose.theta() = msgWaypointI.pose.theta;
       waypointI.state = msgWaypointI.state;
     }
-    _routeManager.active_idx_ = _msg.waypointActiveIdx;
+    _routeManager.active_idx_ = _msg.waypoint_active_idx;
     _routeManager.compute_line_segments();
     _routeManager.computeWaypointsDistanceToGoal();
     _routeManager.hasChanged = false;

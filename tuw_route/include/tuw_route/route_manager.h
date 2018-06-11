@@ -84,23 +84,23 @@ public:
   Pose2D agentPose();
 
 public:
-  double routeWaypointSampleDist_;
+  double route_waypoint_sample_dist_;
 
 public:
-  double routeMaxDeviation_;
+  double route_max_deviation_;
 
 public:
-  double waypointActiveArcLen_;
+  double waypoint_active_arc_len_;
 
 public:
-  double visitedWaypointMinDAngle_;
+  double visited_waypoint_min_dangle_;
 
   /** updates the state of all the loaded waypoints */
 private:
   void updateWaypoints(const bool& _keepLast = false);
 
 private:
-  Pose2D agentPose_;
+  Pose2D agent_pose_;
 };
 }
 #endif  // ROUTE_MANAGER_H
